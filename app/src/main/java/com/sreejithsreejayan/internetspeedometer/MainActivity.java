@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         Notification.Builder notification =new Notification.Builder(this,CHANNEL_ID)
                 .setSmallIcon(getIcon())
                 .setContentTitle("Upload: "+mSpeed.getSpeed("upSpeed").nSpeed+mSpeed.getSpeed("upSpeed").nSpeedUnit+"  "+"Download: "+ mSpeed.getSpeed("downSpeed").nSpeed+mSpeed.getSpeed("downSpeed").nSpeedUnit)
-//                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
                 .setContentText("some text and working on it")
                 .setPriority(Notification.PRIORITY_MAX)
                 .setOnlyAlertOnce(true)

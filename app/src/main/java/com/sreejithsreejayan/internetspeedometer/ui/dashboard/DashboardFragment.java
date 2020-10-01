@@ -15,7 +15,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.sreejithsreejayan.internetspeedometer.R;
+
+import java.util.ArrayList;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -23,6 +29,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     private Button wifi,mob,both;
     private String whichStats = "both";
+
+    private BarChart barChart;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,7 +46,27 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         both=root.findViewById(R.id.WifiAndMobBtn);
         both.setOnClickListener(this);
 
+        barChart=root.findViewById(R.id.BarChart);
+        BarDataSet barDataSet = new BarDataSet(dataValues1(),"dataset1");
+        BarData barData = new BarData();
+        barData.addDataSet(barDataSet);
+        barChart.setData(barData);
+        barChart.invalidate();
+
         return root;
+    }
+
+    private ArrayList<BarEntry> dataValues1(){
+        ArrayList<BarEntry>dataVals=new ArrayList<>();
+        dataVals.add(new BarEntry(0,7));
+        dataVals.add(new BarEntry(1,8));
+        dataVals.add(new BarEntry(2,6));
+        dataVals.add(new BarEntry(3,7));
+        dataVals.add(new BarEntry(4,6));
+        dataVals.add(new BarEntry(5,8));
+        dataVals.add(new BarEntry(6,7));
+        dataVals.add(new BarEntry(7,6));
+        return dataVals;
     }
 
     private void restart() {
