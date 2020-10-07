@@ -12,9 +12,14 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.github.mikephil.charting.data.BarEntry;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 @TargetApi(Build.VERSION_CODES.M)
 public class NetworkStatsHelper {
+
+//    todo complete the class with the necessery codes
 
     NetworkStatsManager networkStatsManager;
     int packageUid;
@@ -172,8 +177,35 @@ public class NetworkStatsHelper {
         return "";
     }
 
+    public ArrayList<BarEntry> getBarEntryArrayList(){
+        ArrayList<BarEntry>dataVals=new ArrayList<>();
 
+        Calendar startCalendar,refCalendar,stopCalendar;
+        refCalendar=Calendar.getInstance();
+        refCalendar.add(Calendar.DAY_OF_MONTH,-5);
+        startCalendar= Calendar.getInstance();
+        stopCalendar=Calendar.getInstance();
 
+        NetworkStats.Bucket bucket;
+        try {
+            for (int i=0;i<5;i++){
+                startCalendar.set(refCalendar.get(Calendar.YEAR),refCalendar.get(Calendar.MONTH),refCalendar.get(Calendar.DAY_OF_MONTH),0,0);
+                stopCalendar.set(refCalendar.get(Calendar.YEAR),refCalendar.get(Calendar.MONTH),refCalendar.get(Calendar.DAY_OF_MONTH)+1,0,0);
+
+                bucket = networkStatsManager.querySummaryForDevice(ConnectivityManager.TYPE_WIFI,"",startCalendar.getTimeInMillis(),stopCalendar.getTimeInMillis());
+                long rxBytes = bucket.getRxBytes();
+                long txBytes = bucket.getTxBytes();
+                long dataInMb = rxBytes/1000000;
+                dataVals.add(new BarEntry(i,dataInMb));
+                refCalendar.add(Calendar.DAY_OF_MONTH,1);
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        return dataVals;
+    }
 
 
 

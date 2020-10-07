@@ -31,6 +31,7 @@ import com.sreejithsreejayan.internetspeedometer.NetworkStatsHelper;
 import com.sreejithsreejayan.internetspeedometer.R;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class HomeFragment extends Fragment {
 
@@ -57,21 +58,29 @@ public class HomeFragment extends Fragment {
 //                Intent intent= new Intent(getContext(),MainActivity2.class);
 //                startActivity(intent);
 
-                String TAG = "test";
-                Calendar startCalendar;
-                Calendar stopCalendar;
+                String TAG = "TAG";
+                Calendar startCalendar,refCalendar,stopCalendar;
 
+                refCalendar=Calendar.getInstance();
+                refCalendar.add(Calendar.DAY_OF_MONTH,-5);
                 startCalendar= Calendar.getInstance();
                 stopCalendar=Calendar.getInstance();
-                startCalendar.set(2020,10,2,0,0);
-                stopCalendar.set(2020,10,3,0,0);
+
                 NetworkStatsManager networkStatsManager = (NetworkStatsManager) getContext().getSystemService(Context.NETWORK_STATS_SERVICE);
                 NetworkStats.Bucket bucket;
+                Log.d(TAG, "onClick: is run");
                 try {
-                    bucket = networkStatsManager.querySummaryForDevice(ConnectivityManager.TYPE_WIFI,"",0,System.currentTimeMillis());
-                    long rxBytes = bucket.getRxBytes();
-                    long txBytes = bucket.getTxBytes();
-                    Log.d(TAG, "run: "+startCalendar.getTimeInMillis()+" "+stopCalendar.getTimeInMillis()+" "+System.currentTimeMillis()+"  "+rxBytes+"  "+txBytes);
+                    for (int i=0;i<5;i++){
+                        startCalendar.set(refCalendar.get(Calendar.YEAR),refCalendar.get(Calendar.MONTH),refCalendar.get(Calendar.DAY_OF_MONTH),0,0);
+                        stopCalendar.set(refCalendar.get(Calendar.YEAR),refCalendar.get(Calendar.MONTH),refCalendar.get(Calendar.DAY_OF_MONTH)+1,0,0);
+
+                        bucket = networkStatsManager.querySummaryForDevice(ConnectivityManager.TYPE_WIFI,"",startCalendar.getTimeInMillis(),stopCalendar.getTimeInMillis());
+                        long rxBytes = bucket.getRxBytes();
+                        long txBytes = bucket.getTxBytes();
+                        long dataInMb = rxBytes/1000000;
+                        Log.d(TAG, "run: start time: "+startCalendar.getTime()+" stop time: "+stopCalendar.getTime()+"  Data in mb: "+dataInMb+"  "+rxBytes+"  "+txBytes);
+                        refCalendar.add(Calendar.DAY_OF_MONTH,1);
+                    }
 
                 } catch (RemoteException e) {
                     e.printStackTrace();
